@@ -1,16 +1,16 @@
 import "tailwindcss";
 
-const WelcomeMessage = ({setMsg , msg , setMenu, menu}) => {
+const WelcomeMessage = ({setActiveTab}) => {
 
     function setChange(){
-       setMsg(!msg)
-       setMenu(!menu)
+       setMsg(false)
+       setMenu(true)
     }
     return (
         <div>
             <h1 className="font-semibold scale-150 m-10">Welcome to Tiffin Box!!</h1>
             <button type="button" className="bg-amber-400 p-2"
-                onClick={() => setChange()}
+                onClick={() => setActiveTab("menu")}
             >Click to view Food Menu</button>
         </div> 
     )

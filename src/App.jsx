@@ -4,18 +4,28 @@ import Sidebar from './components/Sidebar';
 import WelcomeMessage from './components/WelcomeMessage';
 import FoodMenu from './components/FoodMenu';
 import './App.css'
-import "tailwindcss";
+import FoodCart from './components/FoodCart';
 
 function App() {
-  const [msg, setMsg] = useState(true)
-  const [menu, setMenu] = useState(false);
+  const [activeTab , setActiveTab] = useState("home");
+  const [cart, setCart] = useState([]);
+
+  function addToCart(item){
+      setCart([...cart, item]);
+  }
+  function removeFromCart(itemToRemove){
+     setCart(cart.filter(item => item.id !== itemToRemove.id));
+  }
+
+
   return (
     <>
       <Header></Header>
       <div className='flex gap-10'>
-        <Sidebar></Sidebar>
-        {msg && <WelcomeMessage setMsg={setMsg} msg={msg} setMenu={setMenu} menu={menu}></WelcomeMessage>}
-        {menu && <FoodMenu></FoodMenu>}
+        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab}></Sidebar>
+        {activeTab === "home" && <WelcomeMessage setActiveTab={setActiveTab} />}
+        {activeTab === "menu" && <FoodMenu addToCart={addToCart}></FoodMenu>}
+        {activeTab === "cart" && <FoodCart cart={cart} removeFromCart={removeFromCart}/>}
       </div>
     </>
   )
