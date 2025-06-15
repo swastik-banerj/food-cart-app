@@ -1,6 +1,9 @@
 import { toast } from 'react-hot-toast'
-import { useState, useEffect } from 'react'
-const FoodMenu = ({ addToCart }) => {
+import { useState, useEffect, useContext } from 'react'
+import { cartContext } from '../App';
+const FoodMenu = () => {
+
+  const cartObj = useContext(cartContext);
 
   const [loading, setLoading] = useState(true);
   const [foodItems, setFoodItems] = useState([]);
@@ -47,7 +50,7 @@ const FoodMenu = ({ addToCart }) => {
                   type="button"
                   className="bg-green-600 p-3 mx-10 rounded transform transition-transform duration-200 hover:scale-105 active:scale-95"
                   onClick={() => {
-                    addToCart(item)
+                    cartObj.addToCart(item)
                     toast.success(`${item.name} added to cart!`)
                   }}
                 >Add to cart</button>

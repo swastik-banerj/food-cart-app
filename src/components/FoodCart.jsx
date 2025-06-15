@@ -1,7 +1,9 @@
+import { useContext } from "react";
+import { cartContext } from "../App";
+const FoodCart = () => {
 
-const FoodCart = ({ cart, removeFromCart, clearCart, decreaseQuantity, orderNow, increaseQuantity }) => {
-
-  const totalAmount = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  const cartObj = useContext(cartContext);
+  const totalAmount = cartObj.cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className="bg-amber-200 p-8 rounded-md mx-auto my-14 h-max flex flex-col justify-center items-center">
@@ -10,16 +12,16 @@ const FoodCart = ({ cart, removeFromCart, clearCart, decreaseQuantity, orderNow,
         <button
           type="button"
           className="bg-red-600 p-1 mx-10 rounded h-9"
-          onClick={() => clearCart()}
+          onClick={() => cartObj.clearCart()}
         >Clear Cart</button>
       </div>
 
-      {cart.length === 0 ? (
+      {cartObj.cart.length === 0 ? (
         <h2 className="scale-120" >Your cart is empty..</h2>
       ) :
         (<>
           <ul>
-            {cart.map((item, index) => (
+            {cartObj.cart.map((item, index) => (
               <li key={index} className="mb-2 flex justify-between items-center">
                 <div>
                     <span> {item.name} - Rs.{item.price} x {item.quantity} = Rs.{item.price * item.quantity}</span>
@@ -29,20 +31,20 @@ const FoodCart = ({ cart, removeFromCart, clearCart, decreaseQuantity, orderNow,
                   <button
                     type="button"
                     className="bg-green-600 p-0.5 mx-10 h-5 w-5 rounded"
-                    onClick={() => increaseQuantity(item)}
+                    onClick={() => cartObj.increaseQuantity(item)}
                   > + </button>
 
                   {item.quantity > 1 &&
                     <button
                       type="button"
                       className="bg-red-600 p-0.5 mx-10 h-5 w-5 rounded"
-                      onClick={() => decreaseQuantity(item)}
+                      onClick={() => cartObj.decreaseQuantity(item)}
                     > - </button>
                   }
                   <button
                     type="button"
                     className="bg-red-600 p-3 mx-10 rounded"
-                    onClick={() => removeFromCart(item)}
+                    onClick={() => cartObj.removeFromCart(item)}
                   >Remove</button>
                 </div>
 
@@ -53,8 +55,8 @@ const FoodCart = ({ cart, removeFromCart, clearCart, decreaseQuantity, orderNow,
           <div>
             <span>Total : Rs.{totalAmount}</span>
           </div>
-          {cart.length !== 0 && <button type="button" className="bg-green-700 m-5 p-2 rounded"
-            onClick={() => orderNow()}
+          {cartObj.cart.length !== 0 && <button type="button" className="bg-green-700 m-5 p-2 rounded"
+            onClick={() => cartObj.orderNow()}
           >Order Now!</button>}
         </>
         )
@@ -63,4 +65,4 @@ const FoodCart = ({ cart, removeFromCart, clearCart, decreaseQuantity, orderNow,
   )
 }
 
-export default FoodCart
+export default FoodCart;

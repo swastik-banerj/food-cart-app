@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { createContext, useEffect, useReducer, useState } from 'react'
 import { Toaster } from 'react-hot-toast';
 import { toast } from 'react-hot-toast';
 import Header from './components/Header';
@@ -9,53 +9,66 @@ import './App.css'
 import FoodCart from './components/FoodCart';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-function App() {
-  //const [activeTab, setActiveTab] = useState("home");
-  const [cart, setCart] = useState([]);
+// step 1: create context
+const cartContext = createContext();
 
-  function addToCart(item) {
-    const itemExist = cart.some((cartItem) => cartItem.id === item.id);
-    if (itemExist) {
-      const updatedCart = cart.map((cartItem) =>
-        cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+// step 2 : wrap all children inside a provider
+// step 3 : pass value
+// step 4:  consume the values in the consumer
+
+
+// Using useReducer
+// initial state
+const initialState = JSON.parse(localStorage.getItem('cart')) || [];
+function cartReducer(state, action) {
+  const { type, payload } = action;
+
+  switch (type) {
+
+    case 'ADD_ITEM':
+      const itemExist = state.find((cartItem) => cartItem.id === payload.id);
+      if (itemExist) {
+        return state.map((cartItem) =>
+          cartItem.id === payload.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+        );
+      }
+      return [...state, { ...payload, quantity: 1 }];
+
+    case 'REMOVE_ITEM':
+      return state.filter(item => item.id !== payload.id);
+
+    case 'INCREASE_QTY':
+      return state.map((cartItem) =>
+        cartItem.id === payload.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
       );
-      setCart(updatedCart);
-    }
-    else setCart([...cart, item])
-  }
-  function decreaseQuantity(item) {
-    const updatedCart = cart.map((cartItem) =>
-      cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
-    );
-    setCart(updatedCart);
-  }
 
-  function increaseQuantity(item) {
-    const updatedCart = cart.map((cartItem) =>
-      cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
-    );
-    setCart(updatedCart);
-  }
+      case 'DECREASE_QTY':
+      return state.map((cartItem) =>
+        cartItem.id === payload.id ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
+      );
 
-  function removeFromCart(itemToRemove) {
-    setCart(cart.filter(item => item.id !== itemToRemove.id));
-  }
+    case 'CLEAR_CART':
+      return [];
 
-  function clearCart() {
-    setCart([]);
+    default:
+      return state;
   }
+}
+function App() {
+
+  const [cart, dispatch] = useReducer(cartReducer, initialState);
+
+  const addToCart = item => dispatch({ type: 'ADD_ITEM', payload: item });
+  const clearCart = () => dispatch({ type: 'CLEAR_CART' });
+  const removeFromCart = item => dispatch({ type: 'REMOVE_ITEM', payload: item });
+  const increaseQuantity = item => dispatch({type:'INCREASE_QTY', payload:item});
+  const decreaseQuantity = item => dispatch({type:'DECREASE_QTY', payload:item});
 
   function orderNow() {
     toast.success("Order Placed");
     clearCart();
   }
 
-  useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      setCart(JSON.parse(savedCart))
-    }
-  }, [])
 
   useEffect(() => {
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -68,16 +81,19 @@ function App() {
         <Toaster></Toaster>
         <Header></Header>
         <div className='flex gap-10'>
-          <Sidebar cartCount={cart.length}></Sidebar>
-          <Routes>
-            <Route path='/' element={<WelcomeMessage/>} />
-            <Route path='/menu' element={<FoodMenu addToCart={addToCart}/>} /> 
-            <Route path='/cart' element={<FoodCart cart={cart} removeFromCart={removeFromCart} clearCart={clearCart} decreaseQuantity={decreaseQuantity} orderNow={orderNow} increaseQuantity={increaseQuantity}/>} /> 
-          </Routes>
+          <cartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, decreaseQuantity, increaseQuantity, orderNow }} >
+            <Sidebar cartCount={cart.length}></Sidebar>
+            <Routes>
+              <Route path='/' element={<WelcomeMessage />} />
+              <Route path='/menu' element={<FoodMenu />} />
+              <Route path='/cart' element={<FoodCart />} />
+            </Routes>
+          </cartContext.Provider>
         </div>
       </BrowserRouter>
     </>
   )
 }
 
-export default App
+export default App;
+export { cartContext };
