@@ -1,7 +1,12 @@
 import "tailwindcss";
 import { Link } from "react-router";
 import { assets } from "../assets/assets";
+import { useContext } from "react";
+import { cartContext } from "../App";
 const Header = () => {
+
+   const {signupState, setSignupState, signupPop, setSignupPop} = useContext(cartContext);
+
    return (
       <div className="navBar bg-amber-300">
          <div className="logo">
@@ -25,8 +30,10 @@ const Header = () => {
             </Link>
 
             <div>
-               <button className="border rounded-full p-1.5 hover:bg-amber-200">
-                  Sign-Up
+               <button className="border rounded-full p-1.5 hover:bg-amber-200"
+                  onClick={() => setSignupPop(prev => !prev)}
+               >
+                  {signupState ? 'Sign up' : 'Sign in'}
                </button>
             </div>
             

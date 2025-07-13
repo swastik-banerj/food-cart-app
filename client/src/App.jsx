@@ -1,4 +1,4 @@
-import { createContext, useEffect, useReducer} from 'react'
+import { createContext, useEffect, useReducer, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { toast } from 'react-hot-toast';
 import Header from './components/Header';
@@ -8,7 +8,7 @@ import FoodMenu from './components/FoodMenu';
 import './App.css'
 import FoodCart from './components/FoodCart';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { food_list } from './assets/assets';
+import SignUp from './components/SignUp';
 
 // step 1: create context
 const cartContext = createContext();
@@ -28,7 +28,7 @@ function cartReducer(state, action) {
   switch (type) {
 
     case 'ADD_ITEM':
-      const itemExist = state.find((cartItem) => cartItem.id === payload.id);
+      const itemExist = state.find((cartItem) => cartItem._id === payload._id);
       if (itemExist) {
         return state.map((cartItem) =>
           cartItem.id === payload.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
@@ -37,16 +37,16 @@ function cartReducer(state, action) {
       return [...state, { ...payload, quantity: 1 }];
 
     case 'REMOVE_ITEM':
-      return state.filter(item => item.id !== payload.id);
+      return state.filter(item => item._id !== payload._id);
 
     case 'INCREASE_QTY':
       return state.map((cartItem) =>
-        cartItem.id === payload.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
+        cartItem._id === payload._id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem
       );
 
     case 'DECREASE_QTY':
       return state.map((cartItem) =>
-        cartItem.id === payload.id ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
+        (cartItem._id === payload._id && cartItem.quantity > 1) ? { ...cartItem, quantity: cartItem.quantity - 1 } : cartItem
       );
 
     case 'CLEAR_CART':
@@ -60,6 +60,8 @@ function cartReducer(state, action) {
 function App() {
 
   const [cart, dispatch] = useReducer(cartReducer, initialState);
+  const [signupState, setSignupState] = useState(true);
+  const [signupPop, setSignupPop] = useState(false);
 
   const addToCart = item => dispatch({ type: 'ADD_ITEM', payload: item });
   const clearCart = () => dispatch({ type: 'CLEAR_CART' });
@@ -78,22 +80,22 @@ function App() {
   }, [cart])
 
 
-  return (
+  return (     
     <>
       <BrowserRouter>
         <Toaster></Toaster>
-        <Header></Header>
-        <div className='flex gap-10'>
-          <cartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, decreaseQuantity, increaseQuantity, orderNow }} >
-            {/*<Sidebar cartCount={cart.length}></Sidebar>*/}
+        <cartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, decreaseQuantity, increaseQuantity, orderNow, signupState, setSignupState, signupPop, setSignupPop }} >
+          <Header></Header>
+          {signupPop && <SignUp/>}
+          <div className='flex gap-10'>
             <Routes>
               <Route path='/' element={<WelcomeMessage />} />
               <Route path='/menu' element={<FoodMenu />} />
               <Route path='/cart' element={<FoodCart />} />
             </Routes>
-          </cartContext.Provider>
-        </div>
+          </div>
 
+        </cartContext.Provider>
         <Routes>
           <Route path='/' element={<Footer />} />
         </Routes>

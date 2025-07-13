@@ -20,7 +20,6 @@ const FoodMenu = () => {
     // Stimulate API delay
     setTimeout(() => {
       setFoodItems(food_list);
-
       setLoading(false); // stop loading
     }, 0); // 2s delay
   }, []);
