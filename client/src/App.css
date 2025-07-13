@@ -1,0 +1,17 @@
+@import "tailwindcss";
+.navBar{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 10px;
+}
+
+.menu-items, .navBar-right {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 30px;
+}
+
+
+
