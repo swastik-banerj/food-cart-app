@@ -7,6 +7,8 @@ const SignUp = () => {
 
     const { signupState, setSignupState, setSignupPop } = useContext(cartContext);
 
+    axios.defaults.baseURL = 'http://localhost:5000';
+
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
@@ -38,29 +40,38 @@ const SignUp = () => {
 
         try {
 
-            const endpoint = signupState ? "/api/auth/signup" : "/api/auth/login";
+            const endpoint = signupState ? "/api/auth/signup" : "/api/auth/signin";
             const payload = signupState
                 ? {
                     fullName: formData.fullName,
                     email: formData.email,
                     password: formData.password,
+                    confirmPassword: formData.confirmPassword
                 }
                 : {
                     email: formData.email,
                     password: formData.password,
                 };
 
-            const { data } = await axios.post(endpoint, payload);
+            const { data } = await axios.post(endpoint, payload, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            console.log("Server response:", res.data);
 
             if (data.success) {
-                toast.success(signupState ? "Sign Up Successful" : "Login Successful");
+                toast.success(signupState ? "Sign Up Successful" : "Sign In Successful");
                 setSignupPop(false);
+                return;
             } else {
                 toast.error(data.message || "Something went wrong");
+                return;
             }
 
         } catch (error) {
             toast.error(error.response?.data?.message || "Server error");
+            console.log("Error : ", error.message);
         }
 
     };
