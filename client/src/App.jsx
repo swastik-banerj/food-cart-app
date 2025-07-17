@@ -71,13 +71,15 @@ function App() {
   const increaseQuantity = item => dispatch({ type: 'INCREASE_QTY', payload: item });
   const decreaseQuantity = item => dispatch({ type: 'DECREASE_QTY', payload: item });
 
+  const API = import.meta.env.VITE_API_BASE_URL;
+  
   const saveToCart = async (item) => {
 
     let token = localStorage.getItem("token");
 
     try {
 
-      const res = await axios.post("http://localhost:5000/api/cart/save", {
+      const res = await axios.post(`"${API}/cart/save"`, {
         item: {
           name: item.name,
           price: item.price,
@@ -112,7 +114,7 @@ function App() {
 
       let token = localStorage.getItem("token");
 
-      const res = await axios.post("http://localhost:5000/api/cart/clearCart",
+      const res = await axios.post(`${API}/cart/clearCart`,
         {},
         {
           headers: {
@@ -122,31 +124,31 @@ function App() {
         }
       );
 
-     if(res.data.success){
+      if (res.data.success) {
         clearCart();
         toast.success("Cart cleared successfully")
-     } else{
+      } else {
         toast.error(res.data.message);
-     }
+      }
 
     } catch (error) {
-        console.log("Error while clear cart : ", error);
-        toast.error("Could not clear cart");
+      console.log("Error while clear cart : ", error);
+      toast.error("Could not clear cart");
     }
 
 
   }
 
-  async function orderNow(){
+  async function orderNow() {
     try {
-      
+
       await deleteCart();
       clearCart();
 
       toast.success("Order Placed")
 
     } catch (error) {
-        toast.error("Couldn't place order");
+      toast.error("Couldn't place order");
     }
   }
 
