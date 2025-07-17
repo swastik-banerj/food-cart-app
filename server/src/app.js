@@ -7,7 +7,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-    origin: "food-cart-mld0gz7n2-swastik-banerjs-projects.vercel.app",
+    origin: "https://food-cart-app-delta.vercel.app",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']

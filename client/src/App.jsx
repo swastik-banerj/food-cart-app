@@ -79,7 +79,7 @@ function App() {
 
     try {
 
-      const res = await axios.post(`"${API}/cart/save"`, {
+      const res = await axios.post(`${API}/cart/save`, {
         item: {
           name: item.name,
           price: item.price,
