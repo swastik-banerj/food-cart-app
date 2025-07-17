@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { cartContext } from "../App";
 const Header = () => {
 
-   const {signupState, setSignupState, signupPop, setSignupPop} = useContext(cartContext);
+   const {signupState, setSignupPop, userState} = useContext(cartContext);
 
    return (
       <div className="navBar bg-amber-300">
@@ -30,11 +30,16 @@ const Header = () => {
             </Link>
 
             <div>
+               { userState? <button className="border rounded-full p-1.5 hover:bg-amber-200"  >
+                  {`${userState.fullName}`}
+               </button>
+
+               :   
                <button className="border rounded-full p-1.5 hover:bg-amber-200"
                   onClick={() => setSignupPop(prev => !prev)}
                >
                   {signupState ? 'Sign up' : 'Sign in'}
-               </button>
+               </button> }
             </div>
             
          </div>

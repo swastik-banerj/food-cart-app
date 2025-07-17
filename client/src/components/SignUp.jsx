@@ -2,10 +2,13 @@ import { useContext, useState } from "react";
 import { cartContext } from "../App";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
 const SignUp = () => {
 
-    const { signupState, setSignupState, setSignupPop } = useContext(cartContext);
+    const navigate = useNavigate();
+
+    const { signupState, setSignupState, setSignupPop, userState, setUserState} = useContext(cartContext);
 
     axios.defaults.baseURL = 'http://localhost:5000';
 
@@ -58,11 +61,14 @@ const SignUp = () => {
                     "Content-Type": "application/json"
                 }
             });
-            console.log("Server response:", res.data);
 
             if (data.success) {
+                localStorage.setItem("token", data.token);
                 toast.success(signupState ? "Sign Up Successful" : "Sign In Successful");
                 setSignupPop(false);
+                setSignupState(false);
+                setUserState(data.userData);
+                navigate("/cart");
                 return;
             } else {
                 toast.error(data.message || "Something went wrong");
@@ -71,7 +77,6 @@ const SignUp = () => {
 
         } catch (error) {
             toast.error(error.response?.data?.message || "Server error");
-            console.log("Error : ", error.message);
         }
 
     };
@@ -80,7 +85,7 @@ const SignUp = () => {
 
 
     return (
-        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-40 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex justify-center items-center  bg-opacity-40 backdrop-blur-sm">
             <div className="bg-white w-[90vw] max-w-md p-6 rounded shadow-md relative">
                 <button
                     onClick={() => setSignupPop(false)}

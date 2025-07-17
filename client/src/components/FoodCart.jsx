@@ -12,7 +12,7 @@ const FoodCart = () => {
         <button
           type="button"
           className="bg-red-600 p-1 mx-10 rounded h-9"
-          onClick={() => cartObj.clearCart()}
+          onClick={() => cartObj.deleteCart()}
         >Clear Cart</button>
       </div>
 

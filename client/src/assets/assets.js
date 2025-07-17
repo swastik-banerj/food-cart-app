@@ -124,7 +124,6 @@ export const food_list = [
         price: 12,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Salad",
-        quantity: 1
     },
     {
         _id: "2",
@@ -133,7 +132,6 @@ export const food_list = [
         price: 18,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Salad",
-        quantity: 1
     }, {
         _id: "3",
         name: "Clover Salad",
@@ -141,7 +139,6 @@ export const food_list = [
         price: 16,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Salad",
-        quantity: 1
     }, {
         _id: "4",
         name: "Chicken Salad",
@@ -149,7 +146,6 @@ export const food_list = [
         price: 24,
         description: "Food provides essential nutrients for overall health and well-being",
         category: "Salad",
-        quantity: 1
     }, {
         _id: "5",
         name: "Lasagna Rolls",

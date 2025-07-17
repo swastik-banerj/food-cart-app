@@ -7,8 +7,9 @@ import WelcomeMessage from './components/WelcomeMessage';
 import FoodMenu from './components/FoodMenu';
 import './App.css'
 import FoodCart from './components/FoodCart';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import SignUp from './components/SignUp';
+import axios from 'axios';
 
 // step 1: create context
 const cartContext = createContext();
@@ -62,6 +63,7 @@ function App() {
   const [cart, dispatch] = useReducer(cartReducer, initialState);
   const [signupState, setSignupState] = useState(true);
   const [signupPop, setSignupPop] = useState(false);
+  const [userState, setUserState] = useState(null);
 
   const addToCart = item => dispatch({ type: 'ADD_ITEM', payload: item });
   const clearCart = () => dispatch({ type: 'CLEAR_CART' });
@@ -69,9 +71,83 @@ function App() {
   const increaseQuantity = item => dispatch({ type: 'INCREASE_QTY', payload: item });
   const decreaseQuantity = item => dispatch({ type: 'DECREASE_QTY', payload: item });
 
-  function orderNow() {
-    toast.success("Order Placed");
-    clearCart();
+  const saveToCart = async (item) => {
+
+    let token = localStorage.getItem("token");
+
+    try {
+
+      const res = await axios.post("http://localhost:5000/api/cart/save", {
+        item: {
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity || 1,
+        }
+      },
+
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+
+        }
+      );
+
+      if (res.data.success) {
+        toast.success("Added to cart");
+        addToCart(item);
+      } else {
+        toast.error(res.data.message)
+      }
+
+    } catch (error) {
+      toast.error("Could not add to cart");
+      console.error(error);
+    }
+  }
+
+  const deleteCart = async () => {
+
+    try {
+
+      let token = localStorage.getItem("token");
+
+      const res = await axios.post("http://localhost:5000/api/cart/clearCart",
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+
+        }
+      );
+
+     if(res.data.success){
+        clearCart();
+        toast.success("Cart cleared successfully")
+     } else{
+        toast.error(res.data.message);
+     }
+
+    } catch (error) {
+        console.log("Error while clear cart : ", error);
+        toast.error("Could not clear cart");
+    }
+
+
+  }
+
+  async function orderNow(){
+    try {
+      
+      await deleteCart();
+      clearCart();
+
+      toast.success("Order Placed")
+
+    } catch (error) {
+        toast.error("Couldn't place order");
+    }
   }
 
 
@@ -80,25 +156,30 @@ function App() {
   }, [cart])
 
 
-  return (     
+  return (
     <>
       <BrowserRouter>
         <Toaster></Toaster>
-        <cartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, decreaseQuantity, increaseQuantity, orderNow, signupState, setSignupState, signupPop, setSignupPop }} >
+        <cartContext.Provider value={{ cart, saveToCart, removeFromCart, deleteCart, decreaseQuantity, increaseQuantity, orderNow, signupState, setSignupState, signupPop, setSignupPop, userState, setUserState }} >
           <Header></Header>
-          {signupPop && <SignUp/>}
+          {signupPop && <SignUp />}
           <div className='flex gap-10'>
             <Routes>
-              <Route path='/' element={<WelcomeMessage />} />
+              <Route path='/' element={
+                <div className='flex flex-col'>
+                  <WelcomeMessage />
+                  <Footer />
+                </div>
+              } />
               <Route path='/menu' element={<FoodMenu />} />
-              <Route path='/cart' element={<FoodCart />} />
+              <Route
+                path="/cart"
+                element={userState ? <FoodCart /> : <Navigate to="/" />}
+              />
             </Routes>
           </div>
 
         </cartContext.Provider>
-        <Routes>
-          <Route path='/' element={<Footer />} />
-        </Routes>
       </BrowserRouter>
     </>
   )

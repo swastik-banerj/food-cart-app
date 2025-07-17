@@ -10,48 +10,57 @@ export const SignUpUser = async (req, res) => {
 
         console.log("Received body:", req.body);
 
-        const {fullName, email, password, confirmPassword } = req.body;
+        const { fullName, email, password, confirmPassword } = req.body;
 
-         if (!fullName || !email || !password || !confirmPassword) {
+        if (!fullName || !email || !password || !confirmPassword) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
             });
         }
 
-        if(password !== confirmPassword){
+        if (password !== confirmPassword) {
             return res.status(400).json({
                 success: false,
                 message: "Passwords do not match"
             });
         }
 
-        if (fullName && email && password && confirmPassword) {
+        const existingUser = await User.findOne({ email });
 
-            const hashedPassword = await hashPassword(password);
-
-            const existingUser = await User.findOne({ email });
-
-            if (existingUser) {
-                return res.status(400).json({
-                    success: false,
-                    message: "Registration Failed. User already exists"
-                });
-            }
-
-            const newUser = new User({
-                fullName,
-                email,
-                password: hashedPassword,
-            });
-
-            await newUser.save();
-
-            return res.status(200).json({
-                success: true,
-                message: "Registration successfull"
+        if (existingUser) {
+            return res.status(400).json({
+                success: false,
+                message: "Registration Failed. User already exists"
             });
         }
+
+
+        const hashedPassword = await hashPassword(password);
+
+        const newUser = new User({
+            fullName,
+            email,
+            password: hashedPassword,
+        });
+
+        await newUser.save();
+
+        const token = jwt.sign(
+            {userId: newUser._id},
+            process.env.JWT_SECRET,
+            {expiresIn: "7d"}
+        )
+
+        const userData = await User.findById(newUser._id).select("-password");
+
+        return res.status(200).json({
+            success: true,
+            token,
+            userData,
+            message: "Registration successfull"
+        });
+
 
     } catch (error) {
         console.log("Error : ", error.message);
@@ -92,26 +101,25 @@ export const SignInUser = async (req, res) => {
         // generate JWT token
 
         const token = jwt.sign(
-            { userId : user._id },
+            { userId: user._id },
             process.env.JWT_SECRET,
             { expiresIn: "7d" }
         );
 
         // Return user info + token without password
 
-        const userData = await User.findOne({email}).select("-password");
+        const userData = await User.findOne({ email }).select("-password");
 
         res.status(200).json({
             success: true,
-            user: userData,
+            userData: userData,
             token,
             message: "Login Successful"
         });
 
-        console.log("User logged in");
+        return;
 
     } catch (error) {
-        console.log("Error while logging : ", error.message);
         res.status(500).json({
             success: false,
             message: "Server error"

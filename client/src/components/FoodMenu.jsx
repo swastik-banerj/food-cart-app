@@ -32,7 +32,7 @@ const FoodMenu = () => {
 
 
   return (
-    <div className="bg-amber-200 p-8 rounded-md mx-auto  h-max flex flex-col justify-center items-center">
+    <div className=" p-8 rounded-md mx-auto  h-max flex flex-col justify-center items-center">
       <h1 className="scale-250 m-10 font-bold">Food Menu</h1>
 
       <div className='flex flex-wrap gap-6 items-center'>
@@ -57,7 +57,7 @@ const FoodMenu = () => {
                   type="button"
                   className="bg-green-600 p-3 mx-10 rounded transform transition-transform duration-200 hover:scale-105 active:scale-95"
                   onClick={() => {
-                    cartObj.addToCart(item)
+                    cartObj.saveToCart(item)
                     toast.success(`${item.name} added to cart!`)
                   }}
                 >Add to cart</button>

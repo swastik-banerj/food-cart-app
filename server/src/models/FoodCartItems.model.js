@@ -1,23 +1,34 @@
 import mongoose from "mongoose";
 
-const foodCartModel = new mongoose.Schema({
+const foodCartSchema = new mongoose.Schema({
 
-    foodId: {
+    user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "FoodItems"
-    },
-
-    quantity: {
-        type: Number,
+        ref: "User",
         required: true,
     },
 
-    owner: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User"
-    }
-}, {timestamps:true});
+    items: [{
+        name: { type: String, required: true },
+        price: { type: Number, required: true },
+        quantity: { type: Number, required: true, min: 1 },
+    }],
 
-export const FoodCartItems = mongoose.model('FoodCartItems', foodCartModel);
+    totalPrice:{
+        type: Number,
+        required: true,
+        default: 0
+    }
+
+}, { timestamps: true });
+
+foodCartSchema.methods.calculateTotalPrice = function () {
+    this.totalPrice = this.items.reduce((total, currItem) => { 
+        return total + currItem.quantity*currItem.price }, 0);
+
+    return this.totalPrice;
+}
+
+export const FoodCartItems = mongoose.model('FoodCartItems', foodCartSchema);
 
 
