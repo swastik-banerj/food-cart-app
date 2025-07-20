@@ -108,7 +108,7 @@ function App() {
     }
   }
 
-  const deleteItemFromCart = async (itemName) => {
+  const deleteItemFromCart = async (item) => {
     let token;
     try {
 
@@ -116,7 +116,7 @@ function App() {
 
       console.log("Token before delete:", localStorage.getItem("token"));
 
-      const res = await axios.delete(`${API}/api/cart/deleteItem/${itemName}`,
+      const res = await axios.delete(`${API}/api/cart/deleteItem/${item.name}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -128,7 +128,7 @@ function App() {
       );
 
       if (res.data.success) {
-        removeFromCart();
+        removeFromCart(item);
         toast.success("Item deleted successfully")
       } else {
         toast.error(res.data.message);

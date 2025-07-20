@@ -57,7 +57,7 @@ const FoodCart = () => {
                   <button
                     type="button"
                     className="bg-red-600 w-15 h-7 p-0.5 rounded"
-                    onClick={() => cartObj.deleteItemFromCart(item.name)}
+                    onClick={() => cartObj.deleteItemFromCart(item)}
                   >Remove</button>
                   <p>Rs.{item.price * item.quantity}</p>
                 </div>
