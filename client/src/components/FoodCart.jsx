@@ -45,13 +45,13 @@ const FoodCart = () => {
                   <button
                     type="button"
                     className="bg-green-600 p-0.5 mx-10 h-5 w-5 rounded"
-                    onClick={() => cartObj.increaseItemQty(item.name)}
+                    onClick={() => cartObj.increaseItemQty(item)}
                   > + </button>
 
                   <button
                     type="button"
                     className="bg-red-600 p-0.5 mx-10 h-5 w-5 rounded"
-                    onClick={() => cartObj.decreaseItemQty(item.name)}
+                    onClick={() => cartObj.decreaseItemQty(item)}
                   > - </button>
 
                   <button

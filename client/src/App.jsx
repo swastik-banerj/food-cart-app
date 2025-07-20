@@ -137,12 +137,12 @@ function App() {
     }
   }
 
-  const increaseItemQty = async (itemName) => {
+  const increaseItemQty = async (item) => {
      try {
 
       let token = localStorage.getItem("token");
 
-      const res = await axios.put(`${API}/api/cart/item/${itemName}/inc`,
+      const res = await axios.put(`${API}/api/cart/item/${item.name}/inc`,
         {},
         {
           headers: {
@@ -153,7 +153,7 @@ function App() {
       );
 
       if (res.data.success) {
-        increaseQuantity();
+        increaseQuantity(item);
         toast.success("Item number increased")
       } else {
         toast.error(res.data.message);
@@ -166,12 +166,12 @@ function App() {
     }
   }
 
-  const decreaseItemQty = async (itemName) => {
+  const decreaseItemQty = async (item) => {
      try {
 
       let token = localStorage.getItem("token");
 
-      const res = await axios.put(`${API}/api/cart/item/${itemName}/dec`,
+      const res = await axios.put(`${API}/api/cart/item/${item.name}/dec`,
         {},
         {
           headers: {
@@ -182,7 +182,7 @@ function App() {
       );
 
       if (res.data.success) {
-        decreaseQuantity();
+        decreaseQuantity(item);
         toast.success("Item number decreased")
       } else {
         toast.error(res.data.message);
