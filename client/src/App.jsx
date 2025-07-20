@@ -109,10 +109,11 @@ function App() {
   }
 
   const deleteItemFromCart = async (itemName) => {
+    let token;
     try {
 
-      let token = localStorage.getItem("token");
-      
+       token = localStorage.getItem("token");
+
       console.log("Token before delete:", localStorage.getItem("token"));
 
       const res = await axios.delete(`${API}/api/cart/deleteItem/${itemName}`,
@@ -135,6 +136,7 @@ function App() {
 
     } catch (error) {
       console.log("Error while deleting item : ", error);
+      console.log("Token : ", token);
       toast.error("Could not delete item");
     }
   }
