@@ -6,20 +6,9 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-    "https://food-cart-app-delta.vercel.app",
-    "https://food-cart-b3s4fo3bj-swastik-banerjs-projects.vercel.app",
-    "https://food-cart.vercel.app" 
-];
 
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error("Not allowed by CORS"));
-        }
-    },
+    origin: "https://tomato-food-cart.vercel.app",
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization']
