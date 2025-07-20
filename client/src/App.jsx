@@ -113,7 +113,7 @@ function App() {
 
       let token = localStorage.getItem("token");
 
-      const res = await axios.delete(`${API}/api/cart/deleteItem/${encodedURIComponent(itemName)}`,
+      const res = await axios.delete(`${API}/api/cart/deleteItem/${itemName}`,
         {},
         {
           headers: {
