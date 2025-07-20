@@ -249,7 +249,7 @@ function App() {
     <>
       <BrowserRouter>
         <Toaster></Toaster>
-        <cartContext.Provider value={{ cart, saveToCart, deleteItemFromCart, deleteCart, decreaseQuantity, increaseQuantity, orderNow, signupState, setSignupState, signupPop, setSignupPop, userState, setUserState }} >
+        <cartContext.Provider value={{ cart, saveToCart, deleteItemFromCart, deleteCart, decreaseItemQty, increaseItemQty, orderNow, signupState, setSignupState, signupPop, setSignupPop, userState, setUserState }} >
           <Header></Header>
           {signupPop && <SignUp />}
           <div className='flex gap-10'>
