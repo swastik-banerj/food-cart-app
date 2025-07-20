@@ -8,7 +8,8 @@ const app = express();
 
 const allowedOrigins = [
     "https://food-cart-app-delta.vercel.app",
-    "https://food-cart-9hjvmdxj0-swastik-banerjs-projects.vercel.app"
+    "https://food-cart-b3s4fo3bj-swastik-banerjs-projects.vercel.app",
+    "https://food-cart.vercel.app" 
 ];
 
 app.use(cors({

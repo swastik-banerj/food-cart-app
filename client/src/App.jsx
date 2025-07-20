@@ -72,7 +72,7 @@ function App() {
   const decreaseQuantity = item => dispatch({ type: 'DECREASE_QTY', payload: item });
 
   const API = import.meta.env.VITE_API_BASE_URL;
-  
+
   const saveToCart = async (item) => {
 
     let token = localStorage.getItem("token");
@@ -107,6 +107,37 @@ function App() {
       console.error(error);
     }
   }
+
+  const deleteItemFromCart = async (itemName) => {
+    try {
+
+      let token = localStorage.getItem("token");
+
+      const res = await axios.delete(`${API}/cart/deleteItem/${itemName}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+
+        }
+      );
+
+      if (res.data.success) {
+        removeFromCart();
+        toast.success("Item deleted successfully")
+      } else {
+        toast.error(res.data.message);
+      }
+
+
+    } catch (error) {
+      console.log("Error while clear cart : ", error);
+      toast.error("Could not delete item");
+    }
+  }
+
+  
 
   const deleteCart = async () => {
 
@@ -162,7 +193,7 @@ function App() {
     <>
       <BrowserRouter>
         <Toaster></Toaster>
-        <cartContext.Provider value={{ cart, saveToCart, removeFromCart, deleteCart, decreaseQuantity, increaseQuantity, orderNow, signupState, setSignupState, signupPop, setSignupPop, userState, setUserState }} >
+        <cartContext.Provider value={{ cart, saveToCart, deleteItemFromCart, deleteCart, decreaseQuantity, increaseQuantity, orderNow, signupState, setSignupState, signupPop, setSignupPop, userState, setUserState }} >
           <Header></Header>
           {signupPop && <SignUp />}
           <div className='flex gap-10'>
