@@ -10,7 +10,7 @@ const SignUp = () => {
 
     const { signupState, setSignupState, setSignupPop, userState, setUserState} = useContext(cartContext);
 
-    axios.defaults.baseURL = 'http://localhost:5000';
+    const API = import.meta.env.VITE_API_BASE_URL;
 
     const [formData, setFormData] = useState({
         fullName: "",
@@ -43,7 +43,7 @@ const SignUp = () => {
 
         try {
 
-            const endpoint = signupState ? "/api/auth/signup" : "/api/auth/signin";
+            const endpoint = signupState ? `${API}/api/auth/signup` : `${API}/api/auth/signin`;
             const payload = signupState
                 ? {
                     fullName: formData.fullName,
