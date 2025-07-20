@@ -117,11 +117,12 @@ function App() {
       console.log("Token before delete:", localStorage.getItem("token"));
 
       const res = await axios.delete(`${API}/api/cart/deleteItem/${itemName}`,
-        {},
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
+
+          data: null,
 
         }
       );
@@ -132,7 +133,6 @@ function App() {
       } else {
         toast.error(res.data.message);
       }
-
 
     } catch (error) {
       console.log("Error while deleting item : ", error);
