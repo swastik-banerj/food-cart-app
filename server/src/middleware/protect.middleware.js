@@ -7,6 +7,7 @@ export const protectRoute = async (req, res, next) => {
         const authHeader = req.headers.authorization;
 
         if (!authHeader || !authHeader.startsWith("Bearer ")) {
+            console.log("auth header : ", authHeader);
             return res.status(401).json({
                 success: false,
                 message: "Unauthorized"

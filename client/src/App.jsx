@@ -112,6 +112,8 @@ function App() {
     try {
 
       let token = localStorage.getItem("token");
+      
+      console.log("Token before delete:", localStorage.getItem("token"));
 
       const res = await axios.delete(`${API}/api/cart/deleteItem/${itemName}`,
         {},
