@@ -132,12 +132,68 @@ function App() {
 
 
     } catch (error) {
-      console.log("Error while clear cart : ", error);
+      console.log("Error while deleting item : ", error);
       toast.error("Could not delete item");
     }
   }
 
-  
+  const increaseItemQty = async (itemName) => {
+     try {
+
+      let token = localStorage.getItem("token");
+
+      const res = await axios.put(`${API}/cart/item/${itemName}/inc`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+
+        }
+      );
+
+      if (res.data.success) {
+        increaseQuantity();
+        toast.success("Item number increased")
+      } else {
+        toast.error(res.data.message);
+      }
+
+
+    } catch (error) {
+      console.log("Error while increase qty : ", error);
+      toast.error("Could not increase item");
+    }
+  }
+
+  const decreaseItemQty = async (itemName) => {
+     try {
+
+      let token = localStorage.getItem("token");
+
+      const res = await axios.put(`${API}/cart/item/${itemName}/dec`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+
+        }
+      );
+
+      if (res.data.success) {
+        increaseQuantity();
+        toast.success("Item number decreased")
+      } else {
+        toast.error(res.data.message);
+      }
+
+
+    } catch (error) {
+      console.log("Error while decrease qty : ", error);
+      toast.error("Could not decrease item");
+    }
+  }
 
   const deleteCart = async () => {
 
