@@ -182,7 +182,7 @@ function App() {
       );
 
       if (res.data.success) {
-        increaseQuantity();
+        decreaseQuantity();
         toast.success("Item number decreased")
       } else {
         toast.error(res.data.message);

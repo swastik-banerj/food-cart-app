@@ -193,9 +193,7 @@ export const decreaseItemOty = async (req, res) => {
     }
 }
 
-
 // clear cart
-
 export const clearCart = async (req, res) => {
     // delete the entire cart
 
