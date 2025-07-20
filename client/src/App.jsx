@@ -142,7 +142,7 @@ function App() {
 
       let token = localStorage.getItem("token");
 
-      const res = await axios.put(`${API}/cart/item/${itemName}/inc`,
+      const res = await axios.put(`${API}/api/cart/item/${itemName}/inc`,
         {},
         {
           headers: {
@@ -171,7 +171,7 @@ function App() {
 
       let token = localStorage.getItem("token");
 
-      const res = await axios.put(`${API}/cart/item/${itemName}/dec`,
+      const res = await axios.put(`${API}/api/cart/item/${itemName}/dec`,
         {},
         {
           headers: {
@@ -201,7 +201,7 @@ function App() {
 
       let token = localStorage.getItem("token");
 
-      const res = await axios.post(`${API}/cart/clearCart`,
+      const res = await axios.post(`${API}/api/cart/clearCart`,
         {},
         {
           headers: {
