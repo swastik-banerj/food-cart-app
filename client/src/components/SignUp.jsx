@@ -77,6 +77,7 @@ const SignUp = () => {
 
         } catch (error) {
             toast.error(error.response?.data?.message || "Server error");
+            console.log("Error while sign up : ", error);
         }
 
     };
